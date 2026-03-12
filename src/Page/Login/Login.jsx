@@ -1,15 +1,18 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import React from "react";
+import React, { useState } from "react";
 // import { auth } from "../../firebase/Firebase.init";
 import { auth2 } from "../../firebase/Firebase.inits";
 
 const Login = () => {
+  const [user, setUser] = useState(null);
+  console.log(user);
   const provider = new GoogleAuthProvider();
-  const handelSignInFacebook = () => {
+  const handelSignIn = () => {
     console.log("facebook login clicked");
     signInWithPopup(auth2, provider)
       .then((result) => {
-        console.log(result);
+        console.log(result.user);
+        setUser(result.user);
       })
       .catch((error) => {
         console.log(error);
@@ -32,8 +35,15 @@ const Login = () => {
       <h3>this is login page</h3>
       {/* <button onClick={handelSignIn}>Sign in with google</button> */}
       <br />
-
-      <button onClick={handelSignInFacebook}>sign in with facebook</button>
+      <button onClick={handelSignIn}>sign in with google</button>
+      {user && (
+        <div>
+          <h3>{user.displayName}</h3>
+          <p>{user.email}</p>
+          <p>{user.uid}</p>
+          <img src={user.photoURL} alt="user" width="100" />
+        </div>
+      )}
     </div>
   );
 };
