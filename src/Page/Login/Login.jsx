@@ -1,13 +1,22 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import React, { useState } from "react";
 // import { auth } from "../../firebase/Firebase.init";
 import { auth2 } from "../../firebase/Firebase.inits";
 
 const Login = () => {
   const [user, setUser] = useState(null);
-  console.log(user);
+  const handelSignOut = () => {
+    signOut(auth2)
+      .then(() => {
+        console.log("sign out complete");
+        setUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const provider = new GoogleAuthProvider();
-  const handelSignIn = () => {
+  const handelSignInG = () => {
     console.log("facebook login clicked");
     signInWithPopup(auth2, provider)
       .then((result) => {
@@ -35,7 +44,12 @@ const Login = () => {
       <h3>this is login page</h3>
       {/* <button onClick={handelSignIn}>Sign in with google</button> */}
       <br />
-      <button onClick={handelSignIn}>sign in with google</button>
+
+      {user ? (
+        <button onClick={handelSignOut}>sign out</button>
+      ) : (
+        <button onClick={handelSignInG}>sign in with google</button>
+      )}
       {user && (
         <div>
           <h3>{user.displayName}</h3>
